@@ -5,6 +5,7 @@ import (
   "context"
 	"github.com/gofiber/fiber/v2"
 	redis "github.com/redis/go-redis/v9"
+  "thewisepigeon/restdis/commands"
 )
 
 func main(){
@@ -16,10 +17,8 @@ func main(){
   redis_client := redis.NewClient(options)
   app := fiber.New()
 
-  app.Get("/info", func(c *fiber.Ctx) error {
-    version := redis_client.Info(ctx)
-    return c.SendString(version.String())
-  })
+  app.Get("/info", commands.Info(redis_client, ctx))
+  app.Get("/get/:key", commands.Get(redis_client, ctx))
 
   app.Listen(":8080")
 }
