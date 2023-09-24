@@ -7,6 +7,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
 	"golang.org/x/crypto/bcrypt"
@@ -41,7 +43,15 @@ func main() {
 		os.Exit(1)
 	}
 	r := chi.NewRouter()
-
+	r.Use(middleware.DefaultLogger)
+	r.Use(cors.Handler(cors.Options{
+    AllowedOrigins:   []string{"http://*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: false,
+		MaxAge:           300, // Maximum value not ignored by any of major browsers
+	}))
 	r.Route("/auth", func(r chi.Router) {
 		r.Post("/login", func(w http.ResponseWriter, r *http.Request) {
 			var body = login_payload{}

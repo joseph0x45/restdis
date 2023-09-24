@@ -1,16 +1,50 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+
 	let username = '';
 	let password = '';
 	let err_message = '';
 	let err = false;
 	let loading = false;
+	let api_url = 'http://127.0.0.1:8080';
 	async function login() {
-		loading = true;
+		try {
+			loading = true;
+			const res = await fetch(`${api_url}/auth/login`, {
+				method: 'POST',
+				body: JSON.stringify({
+					username,
+					password
+				})
+			});
+			loading = false;
+			switch (res.status) {
+				case 500:
+					console.log('came here');
+					throw new Error();
+				case 400:
+					err = true;
+					err_message = 'Invalid credentials';
+					break;
+				case 200:
+					const { token } = (await res.json()) as { token: string };
+					localStorage.setItem('token', token);
+					goto('/');
+				default:
+					break;
+			}
+		} catch (error) {
+			console.log(error);
+			err = true;
+			err_message =
+				'Something unexpected happened. Open an issue on github if the problem persists';
+			loading = false;
+		}
 	}
 </script>
 
 <div class=" flex flex-col items-center justify-center h-screen gap-5">
-	<h1>Log into your RestDis instance administration page</h1>
+	<h1 class="text-md">Log into RestDis</h1>
 	<form class="flex flex-col gap-5" on:submit|preventDefault={login}>
 		<input
 			required
@@ -37,7 +71,7 @@
 			{/if}
 		</button>
 		{#if err}
-			<h1 class="text-center text-xs text-red-500">{err_message}</h1>
+			<h1 class="text-center text-sm text-red-500 w-full line-break">{err_message}</h1>
 		{/if}
 	</form>
 </div>
