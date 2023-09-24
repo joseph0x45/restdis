@@ -25,6 +25,10 @@ type login_payload struct {
 	Password string `json:"password" db:"password"`
 }
 
+type Config struct {
+	JwtSecret string `db:"jwt_secret"`
+}
+
 func main() {
 	db, err := sqlx.Open("sqlite3", "./data.db")
 	if err != nil {
@@ -43,8 +47,8 @@ func main() {
 			var body = login_payload{}
 			err := json.NewDecoder(r.Body).Decode(&body)
 			if err != nil {
-				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 				println(err.Error())
+				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 				return
 			}
 			var user = User{}
@@ -56,8 +60,8 @@ func main() {
 					http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 					return
 				}
-				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 				println(err.Error())
+				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 				return
 			}
 			match := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password))
@@ -65,7 +69,28 @@ func main() {
 				http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 				return
 			}
-			w.WriteHeader(http.StatusOK)
+			var config = Config{}
+			err = db.Get(&config, "select * from config")
+			if err != nil {
+				println(err.Error())
+				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+				return
+			}
+			t, err := GenJWT(user.Username, config.JwtSecret)
+			if err != nil {
+				println(err.Error())
+				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+				return
+			}
+			resp, err := json.Marshal(map[string]string{
+				"token": t,
+			})
+			if err != nil {
+				println(err.Error())
+				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+				return
+			}
+			w.Write(resp)
 		})
 	})
 
