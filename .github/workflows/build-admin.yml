@@ -11,10 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: pnpm/actions-setup@v2
         with:
-          node-version: 16
-          cache: 'npm'
+          version: 8
       - run: |
           cd admin
           npm run build
