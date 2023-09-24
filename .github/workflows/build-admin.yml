@@ -16,4 +16,5 @@ jobs:
           version: 8
       - run: |
           cd admin
-          npm run build
+          pnpm install --frozen-lockfile
+          pnpm build
