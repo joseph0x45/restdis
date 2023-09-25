@@ -1,4 +1,23 @@
 <script lang="ts">
+	import { location } from '$lib/stores';
+	const links = [
+		{
+			title: 'Profile',
+			href: '/profile'
+		},
+		{
+			title: 'Access tokens',
+			href: '/version'
+		},
+		{
+			title: 'Users',
+			href: '/version'
+		},
+		{
+			title: 'Configuration',
+			href: '/config'
+		}
+	];
 </script>
 
 <header class="p-2 w-full border-b">
@@ -8,9 +27,12 @@
 	</div>
 </header>
 <div class=" flex w-full gap-5 p-2 border-b">
-	<a class=" hover:underline" href="/console/">Profile</a>
-	<a class=" hover:underline" href="/console/">Access tokens</a>
-	<a class=" hover:underline" href="/console/">Users</a>
-	<a class=" hover:underline" href="/console/">Configuration</a>
+	{#each links as link}
+		<a class={` ${link.href === $location ? 'underline' : ''} hover:underline `} href={`/console/${link.href}`}
+			>{link.title}</a
+		>
+	{/each}
 </div>
-<slot />
+<div class="m-auto flex justify-center w-[50%]">
+	<slot />
+</div>
