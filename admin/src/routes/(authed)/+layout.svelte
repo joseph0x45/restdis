@@ -16,6 +16,10 @@
 		{
 			title: 'Configuration',
 			href: '/config'
+		},
+		{
+			title: 'Documentation',
+			href: '/docs'
 		}
 	];
 </script>
@@ -28,8 +32,9 @@
 </header>
 <div class=" flex w-full gap-5 p-2 border-b">
 	{#each links as link}
-		<a class={` ${link.href === $location ? 'underline' : ''} hover:underline `} href={`/console/${link.href}`}
-			>{link.title}</a
+		<a
+			class={` ${link.href === $location ? 'underline' : ''} hover:underline `}
+			href={`/console/${link.href}`}>{link.title}</a
 		>
 	{/each}
 </div>
