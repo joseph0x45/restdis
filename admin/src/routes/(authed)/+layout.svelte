@@ -8,7 +8,7 @@
 	</div>
 </header>
 <div class=" flex w-full gap-5 p-2 border-b">
-<a class=" hover:underline" href="/console/">Profile</a>
+	<a class=" hover:underline" href="/console/">Profile</a>
 	<a class=" hover:underline" href="/console/">Access tokens</a>
 	<a class=" hover:underline" href="/console/">Users</a>
 	<a class=" hover:underline" href="/console/">Configuration</a>
