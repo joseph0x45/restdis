@@ -1,4 +1,9 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import { location } from '$lib/stores';
+	onMount(() => {
+		location.set('profile');
+	});
 	let username = 'username';
 	let password = '*************';
 	let saving = false;

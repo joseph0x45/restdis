@@ -3,23 +3,23 @@
 	const links = [
 		{
 			title: 'Profile',
-			href: '/profile'
+			href: 'profile'
 		},
 		{
 			title: 'Access tokens',
-			href: '/version'
+			href: 'tokens'
 		},
 		{
 			title: 'Users',
-			href: '/version'
+			href: 'users'
 		},
 		{
 			title: 'Configuration',
-			href: '/config'
+			href: 'config'
 		},
 		{
 			title: 'Documentation',
-			href: '/docs'
+			href: 'docs'
 		}
 	];
 </script>
@@ -34,10 +34,10 @@
 	{#each links as link}
 		<a
 			class={` ${link.href === $location ? 'underline' : ''} hover:underline `}
-			href={`/console/${link.href}`}>{link.title}</a
+			href={`/${link.href}`}>{link.title}</a
 		>
 	{/each}
 </div>
-<div class="m-auto flex justify-center w-[50%]">
+<div class="m-auto flex justify-center w-[60%]">
 	<slot />
 </div>
