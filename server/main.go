@@ -17,9 +17,13 @@ import (
 )
 
 type User struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Rights   string `json:"rights"`
+	Username string `json:"username" db:"username"`
+	Password string `json:"password" db:"password"`
+	Rights   string `json:"rights" db:"rights"`
+}
+
+type BlacklistedTokens struct {
+	Token string `json:"token" db:"token"`
 }
 
 type login_payload struct {
@@ -31,13 +35,15 @@ type Config struct {
 	JwtSecret string `db:"jwt_secret"`
 }
 
+var Db *sqlx.DB
+
 func main() {
-	db, err := sqlx.Open("sqlite3", "./data.db")
+	Db, err := sqlx.Open("sqlite3", "./data.db")
 	if err != nil {
 		fmt.Printf("Error while connecting to local sqlite database %s", err.Error())
 		os.Exit(1)
 	}
-	err = db.Ping()
+	err = Db.Ping()
 	if err != nil {
 		fmt.Printf("Error while connecting to local sqlite database %s", err.Error())
 		os.Exit(1)
@@ -45,7 +51,7 @@ func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.DefaultLogger)
 	r.Use(cors.Handler(cors.Options{
-    AllowedOrigins:   []string{"http://*"},
+		AllowedOrigins:   []string{"http://*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders:   []string{"Link"},
@@ -62,7 +68,7 @@ func main() {
 				return
 			}
 			var user = User{}
-			err = db.Get(&user, `
+			err = Db.Get(&user, `
         select * from users where username=:username;
       `, body.Username)
 			if err != nil {
@@ -80,7 +86,7 @@ func main() {
 				return
 			}
 			var config = Config{}
-			err = db.Get(&config, "select * from config")
+			err = Db.Get(&config, "select * from config")
 			if err != nil {
 				println(err.Error())
 				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -102,6 +108,16 @@ func main() {
 			}
 			w.Write(resp)
 		})
+	})
+
+	r.Route("/tokens", func(r chi.Router) {
+		r.Use(Auth(""))
+		r.Post("/", GenerateAccessToken)
+		r.Delete("/", BlacklistToken)
+	})
+
+	r.Route("/", func(r chi.Router) {
+		r.Use(Auth("w"))
 	})
 
 	println("Restdis server launched!")

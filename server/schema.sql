@@ -5,6 +5,7 @@ create table users (
 );
 
 create table config (
+  id text default 'main',
   jwt_secret text not null default 'a;cfjs maklsddasd'
 );
 
