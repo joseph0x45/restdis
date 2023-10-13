@@ -6,42 +6,30 @@ package cmd
 import (
 	"fmt"
 	"os"
-
 	"github.com/spf13/cobra"
 )
 
 // rootCmd represents the base command when called without any subcommands
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "A brief description of your application",
-	Long:  `The init command sets up your restdis server by creating a configuration file, a sqlite database.\n Use the -i flag for the interactive version`,
+	Short: "Sets up restdis sqlite database in the user's home directory",
+  SilenceUsage: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		user_homedir, err := os.UserHomeDir()
+		db_location := fmt.Sprintf("%s/.restdis.db", user_homedir)
 		if err != nil {
-			println("Something went wrong while setting up the database: ", err.Error())
+			println("Something went wrong : ", err.Error())
 			os.Exit(1)
 		}
-		if _, err = os.Stat(fmt.Sprintf("%s/restdis", user_homedir)); os.IsNotExist(err) {
-      err = os.Mkdir(fmt.Sprintf("%s/restdis", user_homedir), os.ModePerm)
-
-		}
-		if err != nil {
-			println("Something went wrong while setting up the database: ", err.Error())
-			os.Exit(1)
-		}
-		if err != nil {
-			println("Something went wrong while setting up the database: ", err.Error())
-			os.Exit(1)
-		}
-		db_location := fmt.Sprintf("%s/restdis/data.db", user_homedir)
-		if _, err := os.Stat(db_location); os.IsNotExist(err) {
+		if _, err = os.Stat(db_location); os.IsNotExist(err) {
 			_, err = os.Create(db_location)
 			if err != nil {
-				println("Something went sd wrong while setting up the database: ", err.Error())
+				println("Something went wrong : ", err.Error())
 				os.Exit(1)
 			}
 		}
-		println("Restdis database setup at ", db_location)
+		println("Database initialized at ", db_location)
+		os.Exit(0)
 	},
 }
 
