@@ -8,7 +8,7 @@ import (
 )
 
 func ConnectToDB() *sqlx.DB {
-	db, err := sqlx.Open("sqlite3", "config.DbLocation")
+	db, err := sqlx.Open("sqlite3", "/home/thewisepigeon/code/restdis/data.db")
 	if err != nil {
 		println("Error while connecting to database:", err.Error())
 		os.Exit(1)

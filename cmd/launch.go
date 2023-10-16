@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"restdis/db"
+	"restdis/handlers"
 
 	"github.com/gofiber/template/html/v2"
 
@@ -17,11 +18,18 @@ var launchCmd = &cobra.Command{
 		engine := html.New("/home/thewisepigeon/code/restdis/views", ".html")
 		app := fiber.New(fiber.Config{Views: engine})
 
-    db := db.ConnectToDB()
+		db := db.ConnectToDB()
+    _ = db
 
 		app.Get("/admin/login", func(c *fiber.Ctx) error {
-			return c.Render("login", fiber.Map{})
+      return c.Render("login", fiber.Map{
+        "BadRequest": false,
+      })
 		})
+
+    app.Post("/api/login", func(c *fiber.Ctx) error {
+      return handlers.Login(db, c)
+    })
 
 		app.Listen(":8080")
 	},

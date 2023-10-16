@@ -3,3 +3,6 @@ build:
 
 install-deps:
 	@go mod download
+
+launch:
+	@./restdis launch
