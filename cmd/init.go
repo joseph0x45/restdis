@@ -23,8 +23,8 @@ var initCmd = &cobra.Command{
       println("Something went wrong : ", err.Error())
       os.Exit(1)
     }
-		println("Database initialized at ", db_location)
     config.Init(db_location)
+    println("Database initialized at ", db_location)
 	},
 }
 

@@ -13,5 +13,10 @@ func ConnectToDB() *sqlx.DB {
 		println("Error while connecting to database:", err.Error())
 		os.Exit(1)
 	}
+	err = db.Ping()
+	if err != nil {
+		println("Error while connecting to database:", err.Error())
+		os.Exit(1)
+	}
 	return db
 }
