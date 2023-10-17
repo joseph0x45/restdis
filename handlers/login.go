@@ -23,7 +23,6 @@ func Login(db *sqlx.DB, ctx *fiber.Ctx) error {
 	payload := new(User)
 	err := ctx.BodyParser(payload)
 	if err != nil {
-		println(err.Error())
 		return ctx.SendStatus(fiber.StatusUnauthorized)
 	}
 	u := new(User)
@@ -66,5 +65,5 @@ func Login(db *sqlx.DB, ctx *fiber.Ctx) error {
   cookie.Value = session_id
   cookie.Path = "/"
   ctx.Cookie(cookie)
-  return ctx.Render("console", fiber.Map{})
+  return ctx.Redirect("/admin/home")
 }

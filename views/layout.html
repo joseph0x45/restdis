@@ -2,19 +2,27 @@
 <html lang="en">
 
 <head>
-  <title>Restdis | Console</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="css/style.css" rel="stylesheet">
   <script src="https://unpkg.com/htmx.org@1.9.6"
     integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni"
     crossorigin="anonymous"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
-  <h1>Welcome to the console bozo</h1>
+<body class=" w-full h-screen">
+  <div class="w-full h-full flex">
 
+    <!-- SideBar -->
+    <div class="w-[20%] h-full border-r-2">
+      {{template "partials/sidebar" .}}
+    </div>
+    <!-- App -->
+    <div class="w-[80%] h-full">
+      {{embed}}
+    </div>
+    
+  </div>
 </body>
 
 </html>
