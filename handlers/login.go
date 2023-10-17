@@ -10,8 +10,8 @@ import (
 )
 
 type User struct {
-  Username string `json:"username" form:"username" db:"username"`
-  Password string `json:"Password" form:"password" db:"password"`
+	Username string `json:"username" form:"username" db:"username"`
+	Password string `json:"Password" form:"password" db:"password"`
 }
 
 type Session struct {
@@ -23,7 +23,7 @@ func Login(db *sqlx.DB, ctx *fiber.Ctx) error {
 	payload := new(User)
 	err := ctx.BodyParser(payload)
 	if err != nil {
-    println(err.Error())
+		println(err.Error())
 		return ctx.SendStatus(fiber.StatusUnauthorized)
 	}
 	u := new(User)
@@ -34,15 +34,19 @@ func Login(db *sqlx.DB, ctx *fiber.Ctx) error {
 	)
 	if err != nil {
 		if err == sql.ErrNoRows {
-      return ctx.Render("login", fiber.Map{
-        "BadRequest":true,
-      })
+			return ctx.Render("login", fiber.Map{
+				"BadRequest": true,
+			})
 		}
-		return ctx.SendStatus(fiber.StatusInternalServerError)
+		return ctx.Render("login", fiber.Map{
+			"InternalError": true,
+		})
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(payload.Password))
 	if err != nil {
-		return ctx.SendStatus(fiber.StatusBadRequest)
+		return ctx.Render("login", fiber.Map{
+			"BadRequest": true,
+		})
 	}
 	session_id := uuid.NewString()
 	_, err = db.NamedExec(
@@ -53,10 +57,14 @@ func Login(db *sqlx.DB, ctx *fiber.Ctx) error {
 		},
 	)
 	if err != nil {
-		return ctx.SendStatus(fiber.StatusInternalServerError)
+		return ctx.Render("login", fiber.Map{
+			"InternalError": true,
+		})
 	}
-	data := map[string]string{
-		"session_id": session_id,
-	}
-	return ctx.JSON(data)
+  cookie := new(fiber.Cookie)
+  cookie.Name = "session_id"
+  cookie.Value = session_id
+  cookie.Path = "/"
+  ctx.Cookie(cookie)
+  return ctx.Render("console", fiber.Map{})
 }
