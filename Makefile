@@ -4,5 +4,8 @@ build:
 install-deps:
 	@go mod download
 
-launch:
-	@./restdis launch
+start-tailwind-compilation:
+	@npx tailwindcss -i ./assets/app.css -o ./public/output.css --minify --watch
+
+build-css:
+	@npx tailwindcss -i ./assets/app.css -o ./public/output.css --minify

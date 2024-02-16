@@ -9,3 +9,5 @@ go.work
 restdis.db
 *.env
 tmp/
+node_modules
+public/output.css
