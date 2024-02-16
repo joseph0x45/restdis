@@ -1,13 +1,21 @@
 package handlers
 
 import (
+	"embed"
 	"html/template"
+	"log"
 	"net/http"
 )
 
-func RenderLoginPage(tpl *template.Template) http.Handler {
+func RenderLoginPage(fs *embed.FS) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello from the login page"))
+		templ, err := template.ParseFS(fs, "views/base.html", "views/login.html")
+		if err != nil {
+      log.Printf("Error while loading templates: %v\n", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		templ.ExecuteTemplate(w, "base", nil)
 		return
 	})
 }

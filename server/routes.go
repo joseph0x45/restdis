@@ -1,11 +1,11 @@
 package server
 
 import (
-	"html/template"
+	"embed"
 	"net/http"
 	"restdis/handlers"
 )
 
-func RegisterRoutes(mux *http.ServeMux, tmpl template.Template) {
-	mux.Handle("/login", handlers.RenderLoginPage(&tmpl))
+func RegisterRoutes(mux *http.ServeMux, fs *embed.FS) {
+	mux.Handle("/login", handlers.RenderLoginPage(fs))
 }

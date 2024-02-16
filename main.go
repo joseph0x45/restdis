@@ -1,21 +1,23 @@
 package main
 
 import (
+	"embed"
 	"github.com/joho/godotenv"
-	"html/template"
 	"log"
 	"net"
 	"net/http"
 	"restdis/server"
 )
 
+//go:embed views
+var views embed.FS
+
 func main() {
 	err := godotenv.Load()
 	if err != nil {
 		panic(err)
 	}
-	tmpl := template.Template{}
-	srv := server.NewServer(tmpl)
+	srv := server.NewServer(&views)
 	server := &http.Server{
 		Addr:    net.JoinHostPort("localhost", "8080"),
 		Handler: srv,

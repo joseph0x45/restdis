@@ -1,12 +1,12 @@
 package server
 
 import (
-	"html/template"
+	"embed"
 	"net/http"
 )
 
-func NewServer(tmpl template.Template) http.Handler {
+func NewServer(fs *embed.FS) http.Handler {
 	mux := http.NewServeMux()
-	RegisterRoutes(mux, tmpl)
+	RegisterRoutes(mux, fs)
 	return mux
 }
