@@ -1,11 +1,9 @@
-/*
-Copyright © 2023 github.com/TheWisePigeon <pigeondev01@gmail.com>
-
-*/
 package main
 
-import "restdis/cmd"
+import (
+	"log"
+)
 
 func main() {
-	cmd.Execute()
+	log.Println("Hello nigga")
 }
