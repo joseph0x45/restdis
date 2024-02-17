@@ -1,5 +1,19 @@
 {{define "main"}}
-<div>
-  <h1>Hello from the Login page</h1>
+
+<head>
+  <title>Restdis | Login</title>
+</head>
+
+<div class="flex flex-col items-center justify-center h-screen w-full gap-5">
+  <h1 class="text-3xl font-semibold">Log into Restdis</h1>
+  <div class="flex flex-col items-center gap-2 w-72">
+    <input class="w-full" type="text" placeholder="Your username" name="username" value="">
+    <input class="w-full" type="password" placeholder="Your password" name="password" value="">
+    <button class="p-3 bg-black text-white w-full" type="submit">
+      <h1>Login</h1>
+    </button>
+    <span id="#error" class="text-red-400 text-sm"></span>
+  </div>
 </div>
+
 {{end}}
