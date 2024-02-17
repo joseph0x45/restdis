@@ -2,6 +2,8 @@ package repositories
 
 import (
 	"database/sql"
+	"log"
+
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -14,5 +16,6 @@ func NewSQLiteConnection() *sql.DB {
 	if err != nil {
 		panic(err)
 	}
+  log.Println("Connected to SQLite database")
 	return db
 }

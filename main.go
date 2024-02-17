@@ -2,11 +2,13 @@ package main
 
 import (
 	"embed"
-	"github.com/joho/godotenv"
 	"log"
 	"net"
 	"net/http"
+	"restdis/repositories"
 	"restdis/server"
+
+	"github.com/joho/godotenv"
 )
 
 //go:embed views
@@ -17,7 +19,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	srv := server.NewServer(&views)
+  db := repositories.NewSQLiteConnection()
+  usersRepop := repositories.NewUsersRepo(db)
+	srv := server.NewServer(&views, usersRepop)
 	server := &http.Server{
 		Addr:    net.JoinHostPort("localhost", "8080"),
 		Handler: srv,
