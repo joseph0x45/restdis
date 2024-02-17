@@ -5,8 +5,8 @@ import (
 	"net/http"
 )
 
-func NewServer(fs *embed.FS) http.Handler {
+func NewServer(viewsFS *embed.FS) http.Handler {
 	mux := http.NewServeMux()
-	RegisterRoutes(mux, fs)
+	RegisterRoutes(mux, viewsFS)
 	return mux
 }

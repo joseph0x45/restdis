@@ -7,5 +7,6 @@ import (
 )
 
 func RegisterRoutes(mux *http.ServeMux, fs *embed.FS) {
-	mux.Handle("/login", handlers.RenderLoginPage(fs))
+	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("public"))))
+	mux.Handle("GET /login", handlers.RenderLoginPage(fs))
 }
